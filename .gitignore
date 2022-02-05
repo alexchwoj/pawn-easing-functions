@@ -3,3 +3,4 @@
 *.cfg
 server_log.txt
 compiler/
+plugins/
