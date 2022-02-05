@@ -1,4 +1,5 @@
 *.exe
 *.amx
 *.cfg
+server_log.txt
 compiler/
