@@ -1,0 +1,4 @@
+*.exe
+*.amx
+*.cfg
+compiler/
