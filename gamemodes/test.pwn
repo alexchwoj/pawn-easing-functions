@@ -10,14 +10,14 @@ stock Float:lerp(Float:start_value, Float:end_value, Float:pct)
     return (start_value + (end_value - start_value) * pct);
 }
 
-stock Float:easeOutCubic(Float:t)
-{
-    return 1 + (--t) * t * t;
-}
-
 stock Float:easeInOutCubic(Float:t)
 {
     return t < 0.5 ? 4 * t * t * t : 1 + (--t) * (2 * (--t)) * (2 * t);
+}
+
+stock Float:easeOutBack(Float:t)
+{
+    return 1 + (--t) * t * (2.70158 * t + 1.70158);
 }
 
 new frame_count;
@@ -30,8 +30,6 @@ public MoveToLeft(playerid, Float:start_x, Float:start_y, Float:end_x, Float:max
 
 	new Float:pct = floatdiv(frame_count, max);
   	new Float:pos_x = lerp(0.0, end_x, easeInOutCubic(pct));
-
-	printf("%f, %f", start_x - pos_x, pct);
 
 	PlayerTextDrawSetPos(playerid, player_textdraw, start_x - pos_x, start_y);
 	PlayerTextDrawShow(playerid, player_textdraw);
@@ -58,14 +56,13 @@ public MoveToRight(playerid, Float:start_x, Float:start_y, Float:end_x, Float:ma
 	frame_count += count;
 
 	new Float:pct = floatdiv(frame_count, max);
-  	new Float:pos_x = lerp(0.0, end_x, easeOutCubic(pct));
+  	new Float:pos_x = lerp(0.0, end_x, easeOutBack(pct));
 
 	PlayerTextDrawSetPos(playerid, player_textdraw, start_x + pos_x, start_y);
 	PlayerTextDrawShow(playerid, player_textdraw);
 
 	if (pct >= 1.0)
 	{
-		printf("%f", start_x + pos_x);
 		frame_count = 0;
 		KillTimer(frame_timer);
 		SetTimerEx("WaitToLeft", 1000, false, "dffffd", playerid, 120.0, 150.0, -90.0, max, count);
