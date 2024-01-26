@@ -4,3 +4,5 @@
 server_log.txt
 compiler/
 plugins/
+gamemodes/
+.vscode/

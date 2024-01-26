@@ -13,6 +13,7 @@
 		{
 			"label": "Build server",
 			"args": [
+				"--%",
 				"${workspaceFolder}\\gamemodes\\test.pwn",
 				"\"-icompiler/include\"",
 				"\"-isource\"",
@@ -26,6 +27,7 @@
 		{
 			"label": "Build file",
 			"args": [
+				"--%",
 				"\"${relativeFile}\"",
 				"\"-icompiler/include\"",
 				"\"-isource\"",
