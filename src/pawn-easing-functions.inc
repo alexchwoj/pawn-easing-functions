@@ -303,6 +303,7 @@ public Animator_Process()
 			switch(g_rgeAnimators[i][e_iType])
 			{
 				case ANIMATOR_POSITION: PlayerTextDrawSetPos(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], x, y);
+				case ANIMATOR_LETTER_SIZE: PlayerTextDrawLetterSize(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], x, y);
 			}
 
 			PlayerTextDrawShow(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw]);
@@ -364,7 +365,9 @@ stock PlayerText_MoveToY(playerid, PlayerText:textdraw, Float:y, duration = 1000
 
 stock PlayerText_MoveLetterSize(playerid, PlayerText:textdraw, Float:y, duration = 1000, ease)
 {
-	return Animator_Insert(playerid, textdraw, start_x, start_y, x, y, duration, ease, ANIMATOR_LETTER_SIZE);
+	new Float:start_x, Float:start_y;
+	PlayerTextDrawGetLetterSize(playerid, textdraw, start_x, start_y);
+	return Animator_Insert(playerid, textdraw, start_x, start_y, start_x, y, duration, ease, ANIMATOR_LETTER_SIZE);
 }
 
 stock PlayerText_StopMove(animator)
