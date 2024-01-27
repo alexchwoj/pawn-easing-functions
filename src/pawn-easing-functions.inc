@@ -51,7 +51,7 @@ const ANIMATORS_UPDATE_RATE = 16;
 #define EASE_OUT_BOUNCE __addressof(easeOutBounce)
 #define EASE_IN_OUT_BOUNCE __addressof(easeInOutBounce)
 
-enum _:eAnimatorTypes 
+enum eAnimatorTypes 
 {
 	ANIMATOR_POSITION,
 	ANIMATOR_LETTER_SIZE,
@@ -75,6 +75,8 @@ enum _:eAnimatorData
 }
 
 new g_rgeAnimators[MAX_ANIMATORS + 1][eAnimatorData];
+
+forward Animator_OnFinish(animator, type);
 
 // Easing functions
 stock Float:easeInSine(Float:t)
@@ -317,6 +319,7 @@ public Animator_Process()
 
 			if (t >= 1.0)
 			{
+				CallLocalFunction("Animator_OnFinish", "ii", i, g_rgeAnimators[i][e_iType]);
 				g_rgeAnimators[i] = g_rgeAnimators[MAX_ANIMATORS];
 				continue;
 			}
