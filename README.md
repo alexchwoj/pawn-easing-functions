@@ -5,6 +5,15 @@ A library that compiles easing functions ported to Pawn, and it also includes an
 ## Read
 Just a friendly note, if you're another Hispanic Roleplayer planning to use it for your low-quality server, please consider leaving me a star, at the very least.
 
+## Implementation
+
+1. Download the latest version in [releases](https://github.com/alexchwoj/pawn-easing-functions/releases)
+2. Enter this line in your initial script
+```pawn
+#include <pawn-easing-functions>
+```
+4. Install [YSF](https://github.com/IS4Code/YSF/releases)
+
 ## Functions
 ```c
 PlayerText_MoveTo(playerid, PlayerText:textdraw, Float:x, Float:y, duration = 1000, ease);
