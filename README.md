@@ -22,7 +22,7 @@ PlayerText_MoveToY(playerid, PlayerText:textdraw, Float:y, duration = 1000, ease
 PlayerText_StopMove(animator);
 ```
 
-## Easing functions
+## Easing list
 ```
 EASE_IN_SINE
 EASE_OUT_SINE
@@ -56,6 +56,24 @@ EASE_OUT_BOUNCE
 EASE_IN_OUT_BOUNCE
 ```
 You can see what each of these features looks like here: https://easings.net/
+
+## Example
+```pawn
+cmd:move(playerid, const params[])
+{
+    new Float:x, Float:y;
+    if (sscanf(params, "ff", x, y))
+    {
+        return SendClientMessage(playerid, 0xDADADAFF, "Usage: /move <x> <y>");
+    }
+
+    if (g_iAnimator != -1)
+        PlayerText_StopMove(g_iAnimator);
+
+    g_iAnimator = PlayerText_MoveTo(playerid, g_tdPlayerTextdraw, x, y, 1000, EASE_OUT_CUBIC);
+    return 1;
+}
+```
 
 ## Update rate
 Internally there is a single timer that is responsible for updating all the animations so as not to saturate the timer server. This system may work poorly for users who have a very bad internet or a lot of packet loss, in any case you can globally change the refresh rate by overwriting the definition "ANIMATORS_UPDATE_RATE" which by default is set to 16 milliseconds.
