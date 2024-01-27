@@ -51,3 +51,6 @@ Internally there is a single timer that is responsible for updating all the anim
 ## Video
 https://github.com/alexchwoj/pawn-easing-functions/assets/49602261/87a10706-be3e-4157-ad0e-f0d5558a509c
 
+## Thanks to
+* [Markski](https://github.com/markski1) for lend a hand
+
