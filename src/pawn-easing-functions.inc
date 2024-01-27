@@ -45,6 +45,13 @@ const ANIMATORS_UPDATE_RATE = 16;
 #define EASE_OUT_BOUNCE __addressof(easeOutBounce)
 #define EASE_IN_OUT_BOUNCE __addressof(easeInOutBounce)
 
+enum _:eAnimatorTypes 
+{
+	ANIMATOR_POSITION,
+	ANIMATOR_LETTER_SIZE,
+	ANIMATOR_TEXT_SIZE
+}
+
 enum _:eAnimatorData
 {
 	bool:e_bValid,
@@ -56,7 +63,8 @@ enum _:eAnimatorData
 	e_iPlayerid,
 	Float:e_fDuration,
 	e_iTick,
-	e_iEase
+	e_iEase,
+	e_iType
 }
 
 new g_rgeAnimators[MAX_ANIMATORS + 1][eAnimatorData];
@@ -286,7 +294,11 @@ public Animator_Process()
 			x = lerp(g_rgeAnimators[i][e_fStartX], g_rgeAnimators[i][e_fTargetX], ease);
 			y = lerp(g_rgeAnimators[i][e_fStartY], g_rgeAnimators[i][e_fTargetY], ease);
 
-			PlayerTextDrawSetPos(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], x, y);
+			switch(g_rgeAnimators[i][e_iType])
+			{
+				case ANIMATOR_POSITION: PlayerTextDrawSetPos(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], x, y);
+			}
+
 			PlayerTextDrawShow(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw]);
 
 			if (t >= 1.0)
@@ -299,11 +311,13 @@ public Animator_Process()
 	return 1;
 }
 
-stock Animator_Insert(playerid, PlayerText:textdraw, Float:start_x, Float:start_y, Float:x, Float:y, duration = 1000, ease)
+stock Animator_Insert(playerid, PlayerText:textdraw, Float:start_x, Float:start_y, Float:x, Float:y, duration = 1000, ease, type)
 {
 	new animator = Animator_GetFreeSlot();
 	if (animator == -1)
 		return -1;
+
+	g_rgeAnimators[animator][e_iType] = type;
 
 	g_rgeAnimators[animator][e_fStartX] = start_x;
 	g_rgeAnimators[animator][e_fStartY] = start_y;
@@ -325,21 +339,26 @@ stock PlayerText_MoveTo(playerid, PlayerText:textdraw, Float:x, Float:y, duratio
 {
 	new Float:start_x, Float:start_y;
 	PlayerTextDrawGetPos(playerid, textdraw, start_x, start_y);
-	return Animator_Insert(playerid, textdraw, start_x, start_y, x, y, duration, ease);
+	return Animator_Insert(playerid, textdraw, start_x, start_y, x, y, duration, ease, ANIMATOR_POSITION);
 }
 
 stock PlayerText_MoveToX(playerid, PlayerText:textdraw, Float:x, duration = 1000, ease)
 {
 	new Float:start_x, Float:start_y;
 	PlayerTextDrawGetPos(playerid, textdraw, start_x, start_y);
-	return Animator_Insert(playerid, textdraw, start_x, start_y, x, start_y, duration, ease);
+	return Animator_Insert(playerid, textdraw, start_x, start_y, x, start_y, duration, ease, ANIMATOR_POSITION);
 }
 
 stock PlayerText_MoveToY(playerid, PlayerText:textdraw, Float:y, duration = 1000, ease)
 {
 	new Float:start_x, Float:start_y;
 	PlayerTextDrawGetPos(playerid, textdraw, start_x, start_y);
-	return Animator_Insert(playerid, textdraw, start_x, start_y, start_x, y, duration, ease);
+	return Animator_Insert(playerid, textdraw, start_x, start_y, start_x, y, duration, ease, ANIMATOR_POSITION);
+}
+
+stock PlayerText_MoveLetterSize(playerid, PlayerText:textdraw, Float:y, duration = 1000, ease)
+{
+	return Animator_Insert(playerid, textdraw, start_x, start_y, x, y, duration, ease, ANIMATOR_LETTER_SIZE);
 }
 
 stock PlayerText_StopMove(animator)
