@@ -52,7 +52,7 @@ new g_largestAnimatorId = 1;
 #define EASE_OUT_BOUNCE __addressof(easeOutBounce)
 #define EASE_IN_OUT_BOUNCE __addressof(easeInOutBounce)
 
-enum _:eAnimatorTypes 
+enum eAnimatorTypes 
 {
 	ANIMATOR_POSITION,
 	ANIMATOR_LETTER_SIZE,
@@ -76,6 +76,8 @@ enum _:eAnimatorData
 }
 
 new g_rgeAnimators[MAX_ANIMATORS + 1][eAnimatorData];
+
+forward Animator_OnFinish(animator, type);
 
 // Easing functions
 stock Float:easeInSine(Float:t)
@@ -279,6 +281,7 @@ stock Animator_Destroy(animator_id)
 	if (animator_id >= MAX_ANIMATORS) return 0;
 
 	g_rgeAnimators[animator_id] = g_rgeAnimators[MAX_ANIMATORS];
+	CallLocalFunction("Animator_OnFinish", "ii", animator_id, g_rgeAnimators[animator_id][e_iType]);
 
 	// If the animator's ID is the largest one (or bigger, although that should be impossible)
 	// Then find the next largest one.
