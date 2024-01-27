@@ -17,7 +17,7 @@
 
 const MAX_ANIMATORS = 1024;
 const ANIMATORS_UPDATE_RATE = 16;
-new g_largestAnimatorId = 1;
+new g_largestAnimatorId = -1;
 
 #define PI 3.14159265
 
@@ -282,8 +282,7 @@ stock Animator_Destroy(animator_id)
 
 	g_rgeAnimators[animator_id] = g_rgeAnimators[MAX_ANIMATORS];
 
-	// If the animator's ID is the largest one (or bigger, although that should be impossible)
-	// Then find the next largest one.
+	// If the destroyed animator's ID is the largest, then find the next largest one.
 	if (animator_id >= g_largestAnimatorId)
 	{
 		// do a reverse loop starting from the previous largest.
@@ -295,8 +294,7 @@ stock Animator_Destroy(animator_id)
 			}
 		}
 		// If we didn't return at the loop, no animators are left.
-		// So reset it to 1.
-		g_largestAnimatorId = 1;
+		g_largestAnimatorId = -1;
 	}
 	return 1;
 }
@@ -304,6 +302,9 @@ stock Animator_Destroy(animator_id)
 forward Animator_Process();
 public Animator_Process()
 {
+	// if largest id is less than 0, no animations are running.
+	if (g_largestAnimatorId < 0) return 1;
+
 	for (new i; i < g_largestAnimatorId; ++i)
 	{
 		if (g_rgeAnimators[i][e_bValid])
@@ -348,7 +349,7 @@ public Animator_Process()
 
 			if (t >= 1.0)
 			{
-				CallLocalFunction("Animator_OnFinish", "ii", animator_id, g_rgeAnimators[animator_id][e_iType]);
+				CallLocalFunction("Animator_OnFinish", "ii", i, g_rgeAnimators[i][e_iType]);
 				Animator_Destroy(i);
 				continue;
 			}
