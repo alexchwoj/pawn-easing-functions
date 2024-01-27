@@ -281,7 +281,6 @@ stock Animator_Destroy(animator_id)
 	if (animator_id >= MAX_ANIMATORS) return 0;
 
 	g_rgeAnimators[animator_id] = g_rgeAnimators[MAX_ANIMATORS];
-	CallLocalFunction("Animator_OnFinish", "ii", animator_id, g_rgeAnimators[animator_id][e_iType]);
 
 	// If the animator's ID is the largest one (or bigger, although that should be impossible)
 	// Then find the next largest one.
@@ -349,6 +348,7 @@ public Animator_Process()
 
 			if (t >= 1.0)
 			{
+				CallLocalFunction("Animator_OnFinish", "ii", animator_id, g_rgeAnimators[animator_id][e_iType]);
 				Animator_Destroy(i);
 				continue;
 			}
