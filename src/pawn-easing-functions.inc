@@ -185,17 +185,17 @@ stock Float:easeInOutExpo(Float:t)
 
 stock Float:easeInCirc(Float:t)
 {
-    return 1.0 - sqrt( 1.0 - t );
+    return 1.0 - floatsqroot( 1.0 - t );
 }
 
 stock Float:easeOutCirc(Float:t)
 {
-    return sqrt( t );
+    return floatsqroot( t );
 }
 
 stock Float:easeInOutCirc(Float:t)
 {
-    return (t < 0.5) ? 0.5 * (1.0 - sqrt(1.0 - 2.0 * t)) : 0.5 * (1.0 + sqrt(2.0 * t - 1));
+    return (t < 0.5) ? 0.5 * (1.0 - floatsqroot(1.0 - 2.0 * t)) : 0.5 * (1.0 + floatsqroot(2.0 * t - 1.0));
 }
 
 stock Float:easeInBack(Float:t)
@@ -305,7 +305,7 @@ public Animator_Process()
 	// if largest id is less than 0, no animations are running.
 	if (g_largestAnimatorId < 0) return 1;
 
-	maxCurrentAnimators = g_largestAnimatorId + 1;
+	new maxCurrentAnimators = g_largestAnimatorId + 1;
 
 	for (new i; i < maxCurrentAnimators; ++i)
 	{
