@@ -2,6 +2,9 @@
 # pawn-easing-functions
 A library that compiles easing functions ported to Pawn, and it also includes an animation system for textdraws. This experimental idea gained fame through the "Hyaxe Roleplay" notifications, and I have finally decided to release a public version of this system.
 
+## Read
+Just a friendly note, if you're another Hispanic Roleplayer planning to use it for your low-quality server, please consider leaving me a star, at the very least.
+
 ## Functions
 ```c
 PlayerText_MoveTo(playerid, PlayerText:textdraw, Float:x, Float:y, duration = 1000, ease);
