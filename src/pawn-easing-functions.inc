@@ -77,7 +77,7 @@ enum _:eAnimatorData
 
 new g_rgeAnimators[MAX_ANIMATORS + 1][eAnimatorData];
 
-forward Animator_OnFinish(animator, type);
+forward Animator_OnFinish(playerid, animator, type);
 
 // Easing functions
 stock Float:easeInSine(Float:t)
@@ -348,7 +348,7 @@ public Animator_Process()
 
 			if (t >= 1.0)
 			{
-				CallLocalFunction("Animator_OnFinish", "ii", animator_id, g_rgeAnimators[animator_id][e_iType]);
+				CallLocalFunction("Animator_OnFinish", "iii", i, g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_iType]);
 				Animator_Destroy(i);
 				continue;
 			}
