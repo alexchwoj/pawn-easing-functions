@@ -286,7 +286,7 @@ stock Animator_Destroy(animator_id)
 	if (animator_id >= g_largestAnimatorId)
 	{
 		// do a reverse loop starting from the previous largest.
-		for (new i = animator_id; i > 0; --i)
+		for (new i = animator_id; i >= 0; --i)
 		{
 			if (g_rgeAnimators[i][e_bValid]) {
 				g_largestAnimatorId = i;
@@ -305,7 +305,9 @@ public Animator_Process()
 	// if largest id is less than 0, no animations are running.
 	if (g_largestAnimatorId < 0) return 1;
 
-	for (new i; i < g_largestAnimatorId; ++i)
+	maxCurrentAnimators = g_largestAnimatorId + 1;
+
+	for (new i; i < maxCurrentAnimators; ++i)
 	{
 		if (g_rgeAnimators[i][e_bValid])
 		{
