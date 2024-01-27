@@ -1,4 +1,10 @@
-// pawn-easing-functions by alexchwoj
+/*
+
+	pawn-easing-functions by alexchwoj
+	
+	Github: https://github.com/alexchwoj
+
+*/
 
 #if defined _pawn_easing_functions_included
 	#endinput
