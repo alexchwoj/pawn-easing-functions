@@ -55,7 +55,8 @@ enum _:eAnimatorTypes
 {
 	ANIMATOR_POSITION,
 	ANIMATOR_LETTER_SIZE,
-	ANIMATOR_TEXT_SIZE
+	ANIMATOR_TEXT_SIZE,
+	ANIMATOR_FULL_SIZE
 }
 
 enum _:eAnimatorData
@@ -305,6 +306,11 @@ public Animator_Process()
 				case ANIMATOR_POSITION: PlayerTextDrawSetPos(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], x, y);
 				case ANIMATOR_LETTER_SIZE: PlayerTextDrawLetterSize(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], x, y);
 				case ANIMATOR_TEXT_SIZE: PlayerTextDrawTextSize(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], x, y);
+				case ANIMATOR_FULL_SIZE:
+				{
+					PlayerTextDrawLetterSize(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], x, y);
+					PlayerTextDrawTextSize(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], x, y);
+				}
 			}
 
 			PlayerTextDrawShow(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw]);
@@ -376,6 +382,16 @@ stock PlayerText_MoveTextSize(playerid, PlayerText:textdraw, Float:x, duration =
 	new Float:start_x, Float:start_y;
 	PlayerTextDrawGetTextSize(playerid, textdraw, start_x, start_y);
 	return Animator_Insert(playerid, textdraw, start_x, start_y, x, start_y, duration, ease, ANIMATOR_TEXT_SIZE);
+}
+
+stock PlayerText_MoveSize(playerid, PlayerText:textdraw, Float:x, Float:y, duration = 1000, ease)
+{
+	new Float:start_x, Float:start_y, Float:temp_axis;
+	PlayerTextDrawGetTextSize(playerid, textdraw, start_x, temp_axis);
+	PlayerTextDrawGetLetterSize(playerid, textdraw, temp_axis, start_y);
+	#pragma unused temp_axis
+
+	return Animator_Insert(playerid, textdraw, start_x, start_y, x, y, duration, ease, ANIMATOR_FULL_SIZE);
 }
 
 stock PlayerText_StopMove(animator)
