@@ -17,7 +17,7 @@
 
 const MAX_ANIMATORS = 1024;
 const ANIMATORS_UPDATE_RATE = 16;
-new g_largestAnimatorId = -1;
+new g_iLargestAnimatorId = -1;
 
 #define PI 3.14159265
 
@@ -57,7 +57,10 @@ enum eAnimatorTypes
 	ANIMATOR_POSITION,
 	ANIMATOR_LETTER_SIZE,
 	ANIMATOR_TEXT_SIZE,
-	ANIMATOR_FULL_SIZE
+	ANIMATOR_FULL_SIZE,
+	ANIMATOR_COLOR,
+	ANIMATOR_BOX_COLOR,
+	ANIMATOR_BACKGROUND_COLOR
 }
 
 enum _:eAnimatorData
@@ -72,7 +75,9 @@ enum _:eAnimatorData
 	Float:e_fDuration,
 	e_iTick,
 	e_iEase,
-	e_iType
+	e_iType,
+	e_iColor,
+	e_iTargetColor
 }
 
 new g_rgeAnimators[MAX_ANIMATORS + 1][eAnimatorData];
@@ -263,12 +268,32 @@ static Float:lerp(Float:start_value, Float:end_value, Float:pct)
     return (start_value + (end_value - start_value) * pct);
 }
 
+static lerp_rgba(color1, color2, Float:t)
+{
+    new r1 = (color1 >> 24) & 0xFF;
+    new g1 = (color1 >> 16) & 0xFF;
+    new b1 = (color1 >> 8) & 0xFF;
+    new a1 = color1 & 0xFF;
+
+    new r2 = (color2 >> 24) & 0xFF;
+    new g2 = (color2 >> 16) & 0xFF;
+    new b2 = (color2 >> 8) & 0xFF;
+    new a2 = color2 & 0xFF;
+
+    new r = r1 + floatround((r2 - r1) * t);
+    new g = g1 + floatround((g2 - g1) * t);
+    new b = b1 + floatround((b2 - b1) * t);
+    new a = a1 + floatround((a2 - a1) * t);
+
+    return (r << 24) | (g << 16) | (b << 8) | a;
+}
+
 static Animator_GetFreeSlot()
 {
 	for (new i; i < MAX_ANIMATORS; ++i)
 	{
 		if (!g_rgeAnimators[i][e_bValid]) {
-			if (i > g_largestAnimatorId) g_largestAnimatorId = i;
+			if (i > g_iLargestAnimatorId) g_iLargestAnimatorId = i;
 		    return i;
 		}
 	}
@@ -283,18 +308,18 @@ stock Animator_Destroy(animator_id)
 	g_rgeAnimators[animator_id] = g_rgeAnimators[MAX_ANIMATORS];
 
 	// If the destroyed animator's ID is the largest, then find the next largest one.
-	if (animator_id >= g_largestAnimatorId)
+	if (animator_id >= g_iLargestAnimatorId)
 	{
 		// do a reverse loop starting from the previous largest.
 		for (new i = animator_id; i >= 0; --i)
 		{
 			if (g_rgeAnimators[i][e_bValid]) {
-				g_largestAnimatorId = i;
+				g_iLargestAnimatorId = i;
 				return 1;
 			}
 		}
 		// If we didn't return at the loop, no animators are left.
-		g_largestAnimatorId = -1;
+		g_iLargestAnimatorId = -1;
 	}
 	return 1;
 }
@@ -303,9 +328,9 @@ forward Animator_Process();
 public Animator_Process()
 {
 	// if largest id is less than 0, no animations are running.
-	if (g_largestAnimatorId < 0) return 1;
+	if (g_iLargestAnimatorId < 0) return 1;
 
-	new maxCurrentAnimators = g_largestAnimatorId + 1;
+	new maxCurrentAnimators = g_iLargestAnimatorId + 1;
 
 	for (new i; i < maxCurrentAnimators; ++i)
 	{
@@ -345,6 +370,9 @@ public Animator_Process()
 					PlayerTextDrawLetterSize(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], x, y);
 					PlayerTextDrawTextSize(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], x, y);
 				}
+				case ANIMATOR_COLOR: PlayerTextDrawColor(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], lerp_rgba(g_rgeAnimators[i][e_iColor], g_rgeAnimators[i][e_iTargetColor], ease));
+				case ANIMATOR_BOX_COLOR: PlayerTextDrawBoxColor(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], lerp_rgba(g_rgeAnimators[i][e_iColor], g_rgeAnimators[i][e_iTargetColor], ease));
+				case ANIMATOR_BACKGROUND_COLOR: PlayerTextDrawBackgroundColor(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], lerp_rgba(g_rgeAnimators[i][e_iColor], g_rgeAnimators[i][e_iTargetColor], ease));
 			}
 
 			PlayerTextDrawShow(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw]);
@@ -360,13 +388,16 @@ public Animator_Process()
 	return 1;
 }
 
-stock Animator_Insert(playerid, PlayerText:textdraw, Float:start_x, Float:start_y, Float:x, Float:y, duration = 1000, ease, type)
+stock Animator_Insert(playerid, PlayerText:textdraw, Float:start_x, Float:start_y, Float:x, Float:y, duration = 1000, ease, type, start_color = -1, target_color = -1)
 {
 	new animator = Animator_GetFreeSlot();
 	if (animator == -1)
 		return -1;
 
 	g_rgeAnimators[animator][e_iType] = type;
+
+	g_rgeAnimators[animator][e_iColor] = start_color;
+	g_rgeAnimators[animator][e_iTargetColor] = target_color;
 
 	g_rgeAnimators[animator][e_fStartX] = start_x;
 	g_rgeAnimators[animator][e_fStartY] = start_y;
@@ -427,6 +458,21 @@ stock PlayerText_MoveSize(playerid, PlayerText:textdraw, Float:x, Float:y, durat
 	#pragma unused temp_axis
 
 	return Animator_Insert(playerid, textdraw, start_x, start_y, x, y, duration, ease, ANIMATOR_FULL_SIZE);
+}
+
+stock PlayerText_InterpolateColor(playerid, PlayerText:textdraw, color, duration = 1000, ease)
+{
+	return Animator_Insert(playerid, textdraw, 0.0, 0.0, 0.0, 0.0, duration, ease, ANIMATOR_COLOR, PlayerTextDrawGetColor(playerid, textdraw), color);
+}
+
+stock PlayerText_InterpolateBoxColor(playerid, PlayerText:textdraw, color, duration = 1000, ease)
+{
+	return Animator_Insert(playerid, textdraw, 0.0, 0.0, 0.0, 0.0, duration, ease, ANIMATOR_BOX_COLOR, PlayerTextDrawGetColor(playerid, textdraw), color);
+}
+
+stock PlayerText_InterpolateBGColor(playerid, PlayerText:textdraw, color, duration = 1000, ease)
+{
+	return Animator_Insert(playerid, textdraw, 0.0, 0.0, 0.0, 0.0, duration, ease, ANIMATOR_BACKGROUND_COLOR, PlayerTextDrawGetColor(playerid, textdraw), color);
 }
 
 stock PlayerText_StopMove(animator_id)
