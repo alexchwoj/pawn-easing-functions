@@ -8,7 +8,6 @@
 #include <a_samp>
 #include <float>
 #include <YSF>
-//#include <amx_assembly\dynamic_call>
 
 #define MAX_ANIMATORS 1024
 #define ANIMATORS_UPDATE_RATE 16
