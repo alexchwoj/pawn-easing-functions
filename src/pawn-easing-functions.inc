@@ -17,6 +17,7 @@
 
 const MAX_ANIMATORS = 1024;
 const ANIMATORS_UPDATE_RATE = 16;
+new g_largestAnimatorId = 1;
 
 #define PI 3.14159265
 
@@ -264,16 +265,44 @@ static Animator_GetFreeSlot()
 {
 	for (new i; i < MAX_ANIMATORS; ++i)
 	{
-		if (!g_rgeAnimators[i][e_bValid])
+		if (!g_rgeAnimators[i][e_bValid]) {
+			if (i > g_largestAnimatorId) g_largestAnimatorId = i;
 		    return i;
+		}
 	}
     return -1;
+}
+
+stock Animator_Destroy(animator_id)
+{
+	// check validity
+	if (animator_id >= MAX_ANIMATORS) return 0;
+
+	g_rgeAnimators[animator_id] = g_rgeAnimators[MAX_ANIMATORS];
+
+	// If the animator's ID is the largest one (or bigger, although that should be impossible)
+	// Then find the next largest one.
+	if (animator_id >= g_largestAnimatorId)
+	{
+		// do a reverse loop starting from the previous largest.
+		for (new i = animator_id; i > 0; --i)
+		{
+			if (g_rgeAnimators[i][e_bValid]) {
+				g_largestAnimatorId = i;
+				return 1;
+			}
+		}
+		// If we didn't return at the loop, no animators are left.
+		// So reset it to 1.
+		g_largestAnimatorId = 1;
+	}
+	return 1;
 }
 
 forward Animator_Process();
 public Animator_Process()
 {
-	for (new i; i < MAX_ANIMATORS; ++i)
+	for (new i; i < g_largestAnimatorId; ++i)
 	{
 		if (g_rgeAnimators[i][e_bValid])
 		{
@@ -317,7 +346,7 @@ public Animator_Process()
 
 			if (t >= 1.0)
 			{
-				g_rgeAnimators[i] = g_rgeAnimators[MAX_ANIMATORS];
+				Animator_Destroy(i);
 				continue;
 			}
 		}
@@ -394,11 +423,11 @@ stock PlayerText_MoveSize(playerid, PlayerText:textdraw, Float:x, Float:y, durat
 	return Animator_Insert(playerid, textdraw, start_x, start_y, x, y, duration, ease, ANIMATOR_FULL_SIZE);
 }
 
-stock PlayerText_StopMove(animator)
+stock PlayerText_StopMove(animator_id)
 {
-	if (animator < MAX_ANIMATORS)
+	if (animator_id < MAX_ANIMATORS)
 	{
-		g_rgeAnimators[animator] = g_rgeAnimators[MAX_ANIMATORS];
+		Animator_Destroy(animator_id);
 		return 1;
 	}
 	return 0;
