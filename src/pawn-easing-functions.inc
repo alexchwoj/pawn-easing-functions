@@ -415,6 +415,14 @@ stock Animator_Insert(playerid, PlayerText:textdraw, Float:start_x, Float:start_
 	return animator;
 }
 
+stock PlayerText_PlaceOnTop(playerid, PlayerText:textdraw)
+{
+	new Float:x, Float:y;
+	PlayerTextDrawGetPos(playerid, textdraw, x, y);
+	PlayerTextDrawShow(playerid, textdraw);
+	return 1;
+}
+
 stock PlayerText_MoveTo(playerid, PlayerText:textdraw, Float:x, Float:y, duration = 1000, ease)
 {
 	new Float:start_x, Float:start_y;
