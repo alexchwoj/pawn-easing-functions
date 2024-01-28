@@ -1,15 +1,16 @@
 
 # pawn-easing-functions
-A library that compiles easing functions ported to Pawn, and it also includes an animation system for textdraws. This experimental idea gained fame through the "Hyaxe Roleplay" notifications, and I have finally decided to release a public version of this system.
+A library that implements easing functions into the Pawn language, and an animation system for textdraws. This idea gained popularity through the "Hyaxe Roleplay" notifications, and I have finally decided to release a public version of this system.
 
 ## Implementation
 
-1. Download the latest version in [releases](https://github.com/alexchwoj/pawn-easing-functions/releases)
-2. Enter this line in your initial script
+1. Download the [latest version](https://github.com/alexchwoj/pawn-easing-functions/releases/latest).
+2. Place the file in your `include` folder.
+3. Enter this line in your initial script.
 ```pawn
 #include <pawn-easing-functions>
 ```
-4. Install [YSF](https://github.com/IS4Code/YSF/releases)
+4. Install [YSF](https://github.com/IS4Code/YSF/releases).
 
 ## Functions
 ```pawn
@@ -71,7 +72,7 @@ EASE_IN_BOUNCE
 EASE_OUT_BOUNCE
 EASE_IN_OUT_BOUNCE
 ```
-You can see what each of these features looks like here: https://easings.net/
+You can see what each of these options looks like here: https://easings.net/
 
 ## Example
 ```pawn
@@ -92,7 +93,7 @@ cmd:move(playerid, const params[])
 ```
 
 ## Update rate
-Internally there is a single timer that is responsible for updating all the animations so as not to saturate the timer server. This system may work poorly for users who have a very bad internet or a lot of packet loss, in any case you can globally change the refresh rate by overwriting the definition "ANIMATORS_UPDATE_RATE" which by default is set to 16 milliseconds.
+There is a single timer responsible for updating all the animations in order to avoid overwhelming SA-MP's timer mechanism. By default, this runs 30 times per second, which can be interpreted as 30 fps. You may change the fps of the animations by defining `EASING_ANIMATION_FRAMERATE` before including the file.
 
 ## Video
 https://github.com/alexchwoj/pawn-easing-functions/assets/49602261/87a10706-be3e-4157-ad0e-f0d5558a509c
@@ -103,5 +104,4 @@ https://github.com/alexchwoj/pawn-easing-functions/assets/49602261/a10f978e-7b2d
 
 
 ## Thanks to
-* [Markski](https://github.com/markski1) for lend a hand
-
+* [Markski](https://github.com/markski1) for lending a hand.
