@@ -11,7 +11,22 @@
 #endif
 #define _pawn_easing_functions_included
 
-#include <a_samp>
+
+
+#if !defined _samp_included
+    #tryinclude <open.mp>
+#endif
+
+#if !defined _INC_open_mp
+    #tryinclude <a_samp>
+#endif
+
+#if !defined _samp_included && !defined _INC_open_mp
+    #error Could not find a_samp.inc or open.mp.inc in your include path.
+#endif
+
+
+
 #include <float>
 #include <YSF>
 
@@ -263,12 +278,12 @@ stock Float:easeInOutBounce(Float:t)
     return (t < 0.5) ? 8.0 * floatpower(2.0, 8.0 * (t - 1.0)) * floatabs(floatsin(t * PI * 7.0)) : 1.0 - 8.0 * floatpower(2.0, -8.0 * t) * floatabs(floatsin(t * PI * 7.0));
 }
 
-static Float:lerp(Float:start_value, Float:end_value, Float:pct)
+stock static Float:lerp(Float:start_value, Float:end_value, Float:pct)
 {
     return (start_value + (end_value - start_value) * pct);
 }
 
-static lerp_rgba(color1, color2, Float:t)
+stock static lerp_rgba(color1, color2, Float:t)
 {
     new r1 = (color1 >> 24) & 0xFF;
     new g1 = (color1 >> 16) & 0xFF;
@@ -288,7 +303,7 @@ static lerp_rgba(color1, color2, Float:t)
     return (r << 24) | (g << 16) | (b << 8) | a;
 }
 
-static Animator_GetFreeSlot()
+stock static Animator_GetFreeSlot()
 {
 	for (new i; i < MAX_ANIMATORS; ++i)
 	{
@@ -374,10 +389,22 @@ public Animator_Process()
 					PlayerTextDrawLetterSize(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], x, y);
 					PlayerTextDrawTextSize(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], x, y);
 				}
-				case ANIMATOR_COLOR: PlayerTextDrawColor(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], lerp_rgba(g_rgeAnimators[i][e_iColor], g_rgeAnimators[i][e_iTargetColor], ease));
-				case ANIMATOR_BOX_COLOR: PlayerTextDrawBoxColor(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], lerp_rgba(g_rgeAnimators[i][e_iColor], g_rgeAnimators[i][e_iTargetColor], ease));
-				case ANIMATOR_BACKGROUND_COLOR: PlayerTextDrawBackgroundColor(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], lerp_rgba(g_rgeAnimators[i][e_iColor], g_rgeAnimators[i][e_iTargetColor], ease));
-			}
+                #if !defined _INC_open_mp
+				    case ANIMATOR_COLOR: PlayerTextDrawColor(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], lerp_rgba(g_rgeAnimators[i][e_iColor], g_rgeAnimators[i][e_iTargetColor], ease));
+				#else
+                	case ANIMATOR_COLOR: PlayerTextDrawColour(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], lerp_rgba(g_rgeAnimators[i][e_iColor], g_rgeAnimators[i][e_iTargetColor], ease));
+                #endif
+                #if !defined _INC_open_mp
+                    case ANIMATOR_BOX_COLOR: PlayerTextDrawBoxColor(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], lerp_rgba(g_rgeAnimators[i][e_iColor], g_rgeAnimators[i][e_iTargetColor], ease));
+				#else
+                    case ANIMATOR_BOX_COLOR: PlayerTextDrawBoxColour(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], lerp_rgba(g_rgeAnimators[i][e_iColor], g_rgeAnimators[i][e_iTargetColor], ease));
+                #endif
+                #if !defined _INC_open_mp
+                    case ANIMATOR_BACKGROUND_COLOR: PlayerTextDrawBackgroundColor(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], lerp_rgba(g_rgeAnimators[i][e_iColor], g_rgeAnimators[i][e_iTargetColor], ease));
+                #else
+                   case ANIMATOR_BACKGROUND_COLOR: PlayerTextDrawBackgroundColour(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], lerp_rgba(g_rgeAnimators[i][e_iColor], g_rgeAnimators[i][e_iTargetColor], ease));
+                #endif
+            }
 
 			PlayerTextDrawShow(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw]);
 
