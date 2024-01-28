@@ -302,6 +302,10 @@ static Animator_GetFreeSlot()
 
 stock Animator_Destroy(animator_id)
 {
+	#if defined PEF_DEBUG
+		printf("[pawn-easing-functions] Animator_Destroy(animator_id = %i)", animator_id);
+	#endif
+
 	// check validity
 	if (animator_id >= MAX_ANIMATORS) return 0;
 
@@ -394,6 +398,10 @@ stock Animator_Insert(playerid, PlayerText:textdraw, Float:start_x, Float:start_
 	if (animator == -1)
 		return -1;
 
+	#if defined PEF_DEBUG
+		printf("[pawn-easing-functions] Created aniamtor: %i", animator);
+	#endif
+
 	g_rgeAnimators[animator][e_iType] = type;
 
 	g_rgeAnimators[animator][e_iColor] = start_color;
@@ -419,6 +427,8 @@ stock PlayerText_PlaceOnTop(playerid, PlayerText:textdraw)
 {
 	new Float:x, Float:y;
 	PlayerTextDrawGetPos(playerid, textdraw, x, y);
+
+	PlayerTextDrawSetPos(playerid, textdraw, x, y + 25.0);
 	PlayerTextDrawShow(playerid, textdraw);
 	return 1;
 }
