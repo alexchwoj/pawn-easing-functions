@@ -15,8 +15,9 @@
 #include <float>
 #include <YSF>
 
-const MAX_ANIMATORS = 1024;
-const ANIMATORS_UPDATE_RATE = 16;
+#define MAX_ANIMATORS 1024
+#define ANIMATORS_UPDATE_RATE 16
+
 new g_iLargestAnimatorId = -1;
 
 #define PI 3.14159265
