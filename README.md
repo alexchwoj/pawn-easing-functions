@@ -12,11 +12,30 @@ A library that compiles easing functions ported to Pawn, and it also includes an
 4. Install [YSF](https://github.com/IS4Code/YSF/releases)
 
 ## Functions
-```c
+```pawn
+// Position
 PlayerText_MoveTo(playerid, PlayerText:textdraw, Float:x, Float:y, duration = 1000, ease);
 PlayerText_MoveToX(playerid, PlayerText:textdraw, Float:x, duration = 1000, ease);
 PlayerText_MoveToY(playerid, PlayerText:textdraw, Float:y, duration = 1000, ease);
+
+// Size
+PlayerText_MoveLetterSize(playerid, PlayerText:textdraw, Float:y, duration = 1000, ease);
+PlayerText_MoveTextSize(playerid, PlayerText:textdraw, Float:x, duration = 1000, ease);
+PlayerText_MoveSize(playerid, PlayerText:textdraw, Float:x, Float:y, duration = 1000, ease);
+
+// Color
+PlayerText_InterpolateColor(playerid, PlayerText:textdraw, color, duration = 1000, ease);
+PlayerText_InterpolateBoxColor(playerid, PlayerText:textdraw, color, duration = 1000, ease);
+PlayerText_InterpolateBGColor(playerid, PlayerText:textdraw, color, duration = 1000, ease);
+
+// General
+PlayerText_PlaceOnTop(playerid, PlayerText:textdraw);
 PlayerText_StopMove(animator);
+```
+
+## Callbacks
+```pawn
+Animator_OnFinish(playerid, animator, type);
 ```
 
 ## Easing list
