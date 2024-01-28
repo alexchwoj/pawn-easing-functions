@@ -399,7 +399,7 @@ stock Animator_Insert(playerid, PlayerText:textdraw, Float:start_x, Float:start_
 		return -1;
 
 	#if defined PEF_DEBUG
-		printf("[pawn-easing-functions] Created aniamtor: %i", animator);
+		printf("[pawn-easing-functions] Created animator: %i", animator);
 	#endif
 
 	g_rgeAnimators[animator][e_iType] = type;
@@ -428,7 +428,7 @@ stock PlayerText_PlaceOnTop(playerid, PlayerText:textdraw)
 	new Float:x, Float:y;
 	PlayerTextDrawGetPos(playerid, textdraw, x, y);
 
-	PlayerTextDrawSetPos(playerid, textdraw, x, y + 25.0);
+	PlayerTextDrawSetPos(playerid, textdraw, x, y);
 	PlayerTextDrawShow(playerid, textdraw);
 	return 1;
 }
