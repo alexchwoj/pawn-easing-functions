@@ -11,12 +11,16 @@
 #endif
 #define _pawn_easing_functions_included
 
+#if !defined EASING_ANIMATION_FRAMERATE
+	#define EASING_ANIMATION_FRAMERATE 30
+#endif
+
+#define MAX_ANIMATORS 1024
+#define ANIMATION_UPDATE_RATE (1000 / EASING_ANIMATION_FRAMERATE)
+
 #include <a_samp>
 #include <float>
 #include <YSF>
-
-#define MAX_ANIMATORS 1024
-#define ANIMATORS_UPDATE_RATE 16
 
 new g_iLargestAnimatorId = -1;
 
@@ -388,17 +392,17 @@ public Animator_Process()
 			;
 
 			__emit
-            {
-                push.s t
-                push.c 4
-                lctrl 6
-                add.c 0x24
-                lctrl 8
-                push.pri
-                load.s.pri ease_addr
-                sctrl 6
-                stor.s.pri ease
-            }
+			{
+				push.s t
+				push.c 4
+				lctrl 6
+				add.c 0x24
+				lctrl 8
+				push.pri
+				load.s.pri ease_addr
+				sctrl 6
+				stor.s.pri ease
+			}
 
 			x = lerp(g_rgeAnimators[i][e_fStartX], g_rgeAnimators[i][e_fTargetX], ease);
 			y = lerp(g_rgeAnimators[i][e_fStartY], g_rgeAnimators[i][e_fTargetY], ease);
@@ -544,7 +548,7 @@ stock PlayerText_StopMove(animator_id)
 
 public OnGameModeInit()
 {
-	SetTimer("Animator_Process", ANIMATORS_UPDATE_RATE, true);
+	SetTimer("Animator_Process", ANIMATION_UPDATE_RATE, true);
 
 	#if defined easing_OnGameModeInit
 		return easing_OnGameModeInit();
