@@ -458,7 +458,7 @@ public Animator_Process()
 
 			if (t >= 1.0)
 			{
-				CallLocalFunction("Animator_OnFinish", "iii", i, g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_iType]);
+				CallLocalFunction("Animator_OnFinish", "iii", g_rgeAnimators[i][e_iPlayerid], i, g_rgeAnimators[i][e_iType]);
 				Animator_Destroy(i);
 				continue;
 			}
