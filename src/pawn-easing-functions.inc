@@ -19,8 +19,40 @@
 #define ANIMATION_UPDATE_RATE (1000 / EASING_ANIMATION_FRAMERATE)
 
 #include <a_samp>
-#include <float>
-#include <YSF>
+
+#if !defined _YSF_included
+	#include <YSF>
+#endif
+
+#if defined _INC_open_mp
+	#if !defined PlayerTextDrawGetBackgroundCol
+		#define PlayerTextDrawGetBackgroundCol PlayerTextDrawGetBackgroundColour
+	#endif
+#else
+	#if !defined PlayerTextDrawColour
+		#define PlayerTextDrawColour PlayerTextDrawColor
+	#endif
+
+	#if !defined PlayerTextDrawBoxColour
+		#define PlayerTextDrawBoxColour PlayerTextDrawBoxColor
+	#endif
+
+	#if !defined PlayerTextDrawBackgroundColour
+		#define PlayerTextDrawBackgroundColour PlayerTextDrawBackgroundColor
+	#endif
+
+	#if !defined PlayerTextDrawGetColour
+		#define PlayerTextDrawGetColour PlayerTextDrawGetColor
+	#endif
+
+	#if !defined PlayerTextDrawGetBoxColour
+		#define PlayerTextDrawGetBoxColour PlayerTextDrawGetBoxColor
+	#endif
+#endif
+
+#define PlayerText_InterpolateColour PlayerText_InterpolateColor
+#define PlayerText_InterpolateBoxColour PlayerText_InterpolateBoxColor
+#define PlayerText_InterpolateBGColour PlayerText_InterpolateBGColor
 
 new g_iLargestAnimatorId = -1;
 
@@ -97,7 +129,7 @@ stock Float:easeInSine(Float:t)
 
 stock Float:easeOutSine(Float:t)
 {
-	return 1.0 + floatsin( 1.5707963 * (--t) );
+	return 1.0 + floatsin( 1.5707963 * (t - 1) );
 }
 
 stock Float:easeInOutSine(Float:t)
@@ -224,11 +256,11 @@ stock Float:easeInOutCirc(Float:t)
 {
     if ( t < 0.5 )
     {
-        return (1.0 - sqrt( 1.0 - 2.0 * t )) * 0.5;
+        return (1.0 - floatsqroot( 1.0 - 2.0 * t )) * 0.5;
     }
     else
     {
-        return (1.0 + sqrt( 2.0 * t - 1 )) * 0.5;
+        return (1.0 + floatsqroot( 2.0 * t - 1.0 )) * 0.5;
     }
 }
 
@@ -417,9 +449,9 @@ public Animator_Process()
 					PlayerTextDrawLetterSize(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], x, y);
 					PlayerTextDrawTextSize(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], x, y);
 				}
-				case ANIMATOR_COLOR: PlayerTextDrawColor(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], lerp_rgba(g_rgeAnimators[i][e_iColor], g_rgeAnimators[i][e_iTargetColor], ease));
-				case ANIMATOR_BOX_COLOR: PlayerTextDrawBoxColor(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], lerp_rgba(g_rgeAnimators[i][e_iColor], g_rgeAnimators[i][e_iTargetColor], ease));
-				case ANIMATOR_BACKGROUND_COLOR: PlayerTextDrawBackgroundColor(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], lerp_rgba(g_rgeAnimators[i][e_iColor], g_rgeAnimators[i][e_iTargetColor], ease));
+				case ANIMATOR_COLOR: PlayerTextDrawColour(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], lerp_rgba(g_rgeAnimators[i][e_iColor], g_rgeAnimators[i][e_iTargetColor], ease));
+				case ANIMATOR_BOX_COLOR: PlayerTextDrawBoxColour(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], lerp_rgba(g_rgeAnimators[i][e_iColor], g_rgeAnimators[i][e_iTargetColor], ease));
+				case ANIMATOR_BACKGROUND_COLOR: PlayerTextDrawBackgroundColour(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw], lerp_rgba(g_rgeAnimators[i][e_iColor], g_rgeAnimators[i][e_iTargetColor], ease));
 			}
 
 			PlayerTextDrawShow(g_rgeAnimators[i][e_iPlayerid], g_rgeAnimators[i][e_tdTextdraw]);
@@ -523,17 +555,17 @@ stock PlayerText_MoveSize(playerid, PlayerText:textdraw, Float:x, Float:y, durat
 
 stock PlayerText_InterpolateColor(playerid, PlayerText:textdraw, color, duration = 1000, ease)
 {
-	return Animator_Insert(playerid, textdraw, 0.0, 0.0, 0.0, 0.0, duration, ease, ANIMATOR_COLOR, PlayerTextDrawGetColor(playerid, textdraw), color);
+	return Animator_Insert(playerid, textdraw, 0.0, 0.0, 0.0, 0.0, duration, ease, ANIMATOR_COLOR, PlayerTextDrawGetColour(playerid, textdraw), color);
 }
 
 stock PlayerText_InterpolateBoxColor(playerid, PlayerText:textdraw, color, duration = 1000, ease)
 {
-	return Animator_Insert(playerid, textdraw, 0.0, 0.0, 0.0, 0.0, duration, ease, ANIMATOR_BOX_COLOR, PlayerTextDrawGetColor(playerid, textdraw), color);
+	return Animator_Insert(playerid, textdraw, 0.0, 0.0, 0.0, 0.0, duration, ease, ANIMATOR_BOX_COLOR, PlayerTextDrawGetBoxColour(playerid, textdraw), color);
 }
 
 stock PlayerText_InterpolateBGColor(playerid, PlayerText:textdraw, color, duration = 1000, ease)
 {
-	return Animator_Insert(playerid, textdraw, 0.0, 0.0, 0.0, 0.0, duration, ease, ANIMATOR_BACKGROUND_COLOR, PlayerTextDrawGetColor(playerid, textdraw), color);
+	return Animator_Insert(playerid, textdraw, 0.0, 0.0, 0.0, 0.0, duration, ease, ANIMATOR_BACKGROUND_COLOR, PlayerTextDrawGetBackgroundCol(playerid, textdraw), color);
 }
 
 stock PlayerText_StopMove(animator_id)
