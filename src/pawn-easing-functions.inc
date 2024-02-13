@@ -553,6 +553,16 @@ stock PlayerText_MoveSize(playerid, PlayerText:textdraw, Float:x, Float:y, durat
 	return Animator_Insert(playerid, textdraw, start_x, start_y, x, y, duration, ease, ANIMATOR_FULL_SIZE);
 }
 
+stock PlayerText_InterpolateLetterSize(playerid, PlayerText:textdraw, Float:start_y, Float:end_y, duration = 1000, ease)
+{
+	return Animator_Insert(playerid, textdraw, 0.0, start_y, 0.0, end_y, duration, ease, ANIMATOR_LETTER_SIZE);
+}
+
+stock PlayerText_InterpolateTextSize(playerid, PlayerText:textdraw, Float:start_x, Float:end_x, duration = 1000, ease)
+{
+	return Animator_Insert(playerid, textdraw, start_x, 0.0, end_x, 0.0, duration, ease, ANIMATOR_TEXT_SIZE);
+}
+
 stock PlayerText_InterpolateColor(playerid, PlayerText:textdraw, color, duration = 1000, ease)
 {
 	return Animator_Insert(playerid, textdraw, 0.0, 0.0, 0.0, 0.0, duration, ease, ANIMATOR_COLOR, PlayerTextDrawGetColour(playerid, textdraw), color);
