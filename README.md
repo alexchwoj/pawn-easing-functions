@@ -23,6 +23,8 @@ PlayerText_MoveToY(playerid, PlayerText:textdraw, Float:y, duration = 1000, ease
 PlayerText_MoveLetterSize(playerid, PlayerText:textdraw, Float:y, duration = 1000, ease);
 PlayerText_MoveTextSize(playerid, PlayerText:textdraw, Float:x, duration = 1000, ease);
 PlayerText_MoveSize(playerid, PlayerText:textdraw, Float:x, Float:y, duration = 1000, ease);
+PlayerText_InterpolateLetterSize(playerid, PlayerText:textdraw, Float:start_y, Float:end_y, duration = 1000, ease);
+PlayerText_InterpolateTextSize(playerid, PlayerText:textdraw, Float:start_x, Float:end_x, duration = 1000, ease);
 
 // Color
 PlayerText_InterpolateColor(playerid, PlayerText:textdraw, color, duration = 1000, ease);
