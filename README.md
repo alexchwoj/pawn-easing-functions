@@ -73,6 +73,7 @@ EASE_IN_OUT_ELASTIC
 EASE_IN_BOUNCE
 EASE_OUT_BOUNCE
 EASE_IN_OUT_BOUNCE
+EASE_NONE
 ```
 You can see what each of these options looks like here: https://easings.net/
 
