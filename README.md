@@ -107,4 +107,4 @@ https://github.com/alexchwoj/pawn-easing-functions/assets/49602261/a10f978e-7b2d
 
 
 ## Thanks to
-* [Markski](https://github.com/markski1) for lending a hand.
+* [Markski](https://github.com/markski1), [Heix](https://github.com/leHeix) for lending a hand.
