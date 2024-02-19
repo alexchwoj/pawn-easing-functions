@@ -88,6 +88,7 @@ new g_iLargestAnimatorId = -1;
 #define EASE_IN_BOUNCE __addressof(easeInBounce)
 #define EASE_OUT_BOUNCE __addressof(easeOutBounce)
 #define EASE_IN_OUT_BOUNCE __addressof(easeInOutBounce)
+#define EASE_NONE __addressof(easeNone)
 
 enum eAnimatorTypes 
 {
@@ -336,6 +337,11 @@ stock Float:easeInOutBounce(Float:t)
     {
         return 1.0 - 8.0 * floatpower( 2.0, -8.0 * t ) * floatabs( floatsin( t * PI * 7.0 ) );
     }
+}
+
+stock Float:easeNone(Float:t)
+{
+	return t;
 }
 
 static Float:lerp(Float:start_value, Float:end_value, Float:pct)
