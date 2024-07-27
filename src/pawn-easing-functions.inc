@@ -56,7 +56,7 @@
 
 new g_iLargestAnimatorId = -1;
 
-#define PI 3.14159265
+#define EASING_FUNC_PI 3.14159265
 
 #define EASE_IN_SINE __addressof(easeInSine)
 #define EASE_OUT_SINE __addressof(easeOutSine)
@@ -289,13 +289,13 @@ stock Float:easeInOutBack(Float:t)
 
 stock Float:easeInElastic(Float:t)
 {
-    return t * t * t * t * floatsin(t * PI * 4.5);
+    return t * t * t * t * floatsin(t * EASING_FUNC_PI * 4.5);
 }
 
 stock Float:easeOutElastic(Float:t)
 {
     new Float:t2 = (t - 1.0) * (t - 1.0);
-    return 1.0 - t2 * t2 * floatcos( t * PI * 4.5 );
+    return 1.0 - t2 * t2 * floatcos( t * EASING_FUNC_PI * 4.5 );
 }
 
 stock Float:easeInOutElastic(Float:t)
@@ -304,38 +304,38 @@ stock Float:easeInOutElastic(Float:t)
     if ( t < 0.45 )
     {
         t2 = t * t;
-        return 8.0 * t2 * t2 * floatsin( t * PI * 9.0 );
+        return 8.0 * t2 * t2 * floatsin( t * EASING_FUNC_PI * 9.0 );
     }
     else if ( t < 0.55 )
     {
-        return 0.5 + 0.75 * floatsin( t * PI * 4.0 );
+        return 0.5 + 0.75 * floatsin( t * EASING_FUNC_PI * 4.0 );
     }
     else
     {
         t2 = (t - 1.0) * (t - 1.0);
-        return 1.0 - 8.0 * t2 * t2 * floatsin( t * PI * 9.0 );
+        return 1.0 - 8.0 * t2 * t2 * floatsin( t * EASING_FUNC_PI * 9.0 );
     }
 }
 
 stock Float:easeInBounce(Float:t)
 {
-    return floatpower( 2.0, 6.0 * (t - 1.0) ) * floatabs( floatsin( t * PI * 3.5 ) );
+    return floatpower( 2.0, 6.0 * (t - 1.0) ) * floatabs( floatsin( t * EASING_FUNC_PI * 3.5 ) );
 }
 
 stock Float:easeOutBounce(Float:t)
 {
-    return 1.0 - floatpower( 2.0, -6.0 * t ) * floatabs( floatcos( t * PI * 3.5 ) );
+    return 1.0 - floatpower( 2.0, -6.0 * t ) * floatabs( floatcos( t * EASING_FUNC_PI * 3.5 ) );
 }
 
 stock Float:easeInOutBounce(Float:t)
 {
 	if ( t < 0.5 )
     {
-        return 8.0 * floatpower( 2.0, 8.0 * (t - 1.0) ) * floatabs( floatsin( t * PI * 7.0 ) );
+        return 8.0 * floatpower( 2.0, 8.0 * (t - 1.0) ) * floatabs( floatsin( t * EASING_FUNC_PI * 7.0 ) );
     }
     else
     {
-        return 1.0 - 8.0 * floatpower( 2.0, -8.0 * t ) * floatabs( floatsin( t * PI * 7.0 ) );
+        return 1.0 - 8.0 * floatpower( 2.0, -8.0 * t ) * floatabs( floatsin( t * EASING_FUNC_PI * 7.0 ) );
     }
 }
 
